@@ -1,0 +1,9 @@
+/* Layout.module.css */
+
+.appShell {
+    min-height: 100vh;
+}
+
+.main {
+    padding-left: 64px;
+}

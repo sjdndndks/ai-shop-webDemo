@@ -1,0 +1,24 @@
+# dependencies / build
+**/node_modules
+**/dist
+**/dist-ssr
+
+# env / secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# logs
+**/logs
+**/*.log
+
+# local history / editor / OS
+.history/
+.vscode/
+.idea/
+.DS_Store
+
+# local runtime data
+ai-shop-server/data/users.json
+ai-shop-server/data/sessions.json
+ai-shop-server/data/orders.json

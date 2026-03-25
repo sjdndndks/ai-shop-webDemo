@@ -1,0 +1,13 @@
+/* Layout.module.css */
+
+.appShell {
+    display: flex;
+    min-height: 100vh;
+    background: #fafafa;
+}
+
+.main {
+    padding: 20px;
+    flex: 1;
+    overflow: auto;
+}

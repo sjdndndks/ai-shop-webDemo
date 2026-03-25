@@ -1,0 +1,42 @@
+[
+  {
+    "id": "order_1774426674178",
+    "userId": "b71199ae-fe99-409a-a630-554706d377e8",
+    "userEmail": "yiii@qq.com",
+    "items": [
+      {
+        "productId": "drink-evian-500",
+        "name": "Evian 天然矿泉水 500ml",
+        "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/File:Evian_Bottle.jpg",
+        "price": 8.5,
+        "quantity": 1,
+        "subtotal": 8.5
+      },
+      {
+        "productId": "drink-perrier-750",
+        "name": "Perrier 巴黎水含气天然矿泉水 750ml",
+        "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/File:Perrier_-_750_ml.JPG",
+        "price": 14.9,
+        "quantity": 1,
+        "subtotal": 14.9
+      }
+    ],
+    "shipping": {
+      "name": "yiii",
+      "phone": "1",
+      "address": "1"
+    },
+    "payment": {
+      "method": "alipay",
+      "gateway": "mock",
+      "cardLast4": "",
+      "status": "paid"
+    },
+    "totals": {
+      "subtotal": 23.4,
+      "shippingFee": 12,
+      "total": 35.4
+    },
+    "createdAt": "2026-03-25T08:17:54.178Z"
+  }
+]

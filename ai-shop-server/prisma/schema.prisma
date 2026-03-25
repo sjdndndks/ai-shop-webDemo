@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentMethod {
+  CARD
+  ALIPAY
+  WECHAT
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  CANCELLED
+  FULFILLED
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String
+  email           String           @unique
+  passwordHash    String
+  avatarUrl       String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sessions        Session[]
+  orders          Order[]
+  addresses       Address[]
+  paymentProfiles PaymentProfile[]
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Product {
+  id          String      @id
+  name        String
+  price       Decimal     @db.Decimal(10, 2)
+  imageUrl    String
+  category    String
+  tags        String[]
+  description String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+
+  @@index([category])
+}
+
+model Address {
+  id            String   @id @default(cuid())
+  userId        String
+  label         String
+  recipientName String
+  phone         String
+  address       String
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isDefault])
+}
+
+model PaymentProfile {
+  id                String        @id @default(cuid())
+  userId            String
+  label             String
+  method            PaymentMethod
+  accountName       String
+  accountIdentifier String
+  cardLast4         String?
+  expiry            String?
+  isDefault         Boolean       @default(false)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isDefault])
+}
+
+model Order {
+  id              String        @id
+  userId          String
+  userEmail       String
+  shippingName    String
+  shippingPhone   String
+  shippingAddress String
+  paymentMethod   PaymentMethod
+  paymentGateway  String
+  paymentStatus   PaymentStatus
+  orderStatus     OrderStatus
+  cardLast4       String?
+  subtotal        Decimal       @db.Decimal(10, 2)
+  shippingFee     Decimal       @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  items           OrderItem[]
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  imageUrl  String
+  price     Decimal  @db.Decimal(10, 2)
+  quantity  Int
+  subtotal  Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+}

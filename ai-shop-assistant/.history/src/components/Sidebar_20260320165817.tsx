@@ -1,0 +1,49 @@
+import { NavLink } from "react-router-dom";
+import styles from "./Sidebar.module.css";
+
+type Props = {
+  collapsed: boolean;
+  onToggle: () => void;
+};
+
+export default function Sidebar({ collapsed, onToggle }: Props) {
+  return (
+    <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ""}`}>
+      <div className={styles.top}>
+        <button
+          className={styles.toggleBtn}
+          onClick={onToggle}
+          aria-label="切换侧边栏"
+        >
+          {collapsed ? "☰" : "<"}
+        </button>
+
+        {!collapsed && <div className={styles.brand}>AI Shop</div>}
+      </div>
+
+      <nav className={styles.nav}>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }
+          title="聊天"
+        >
+          <span className={styles.icon}>💬</span>
+          {!collapsed && <span className={styles.text}>聊天</span>}
+        </NavLink>
+
+        <NavLink
+          to="/cart"
+          className={({ isActive }) =>
+            isActive ? `${styles.link} ${styles.active}` : styles.link
+          }
+          title="购物车"
+        >
+          <span className={styles.icon}>🛒</span>
+          {!collapsed && <span className={styles.text}>购物车</span>}
+        </NavLink>
+      </nav>
+    </aside>
+  );
+}

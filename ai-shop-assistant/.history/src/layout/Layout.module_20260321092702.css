@@ -1,0 +1,18 @@
+/* Layout.module.css */
+
+.appShell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #fafafa;
+}
+
+.main {
+    padding: 0;
+    flex: 1;
+    overflow: hidden;
+    min-width: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}

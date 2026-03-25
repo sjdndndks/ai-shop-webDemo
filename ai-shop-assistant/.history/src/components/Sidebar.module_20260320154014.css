@@ -1,0 +1,81 @@
+/* Sidebar.module.css */
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.2s ease;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.collapsed {
+    width: 64px;
+}
+
+.top {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.toggleBtn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #eaeaea;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.nav {
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.link {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+}
+
+.link:hover {
+    background: #f7f7f7;
+}
+
+.active {
+    background: #eaf2ff;
+    color: #1677ff;
+    font-weight: 700;
+}
+
+.icon {
+    width: 24px;
+    display: inline-flex;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.text {
+    white-space: nowrap;
+}

@@ -1,0 +1,82 @@
+/* CartPage.moudle.css */
+
+/* 1.页面主容器 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 200px;
+}
+
+/* 2.页面顶部导航栏 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-bottom: 30px; */
+    margin: 0 auto;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* 3.购物车为空的提示区 */
+.emptyState {
+    text-align: center;
+    color: #999;
+    margin-top: 50px;
+    font-size: 16px;
+}
+
+/* 4.每个商品的卡片列 */
+.cartItem {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 15px 0;
+}
+
+.itemImage {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.itemInfo {
+    flex: 1;
+}
+
+.itemName {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.itemPrice {
+    color: #ff4d4f;
+    margin: 0;
+    font-weight: bold;
+}
+
+/* 5.底部结算区 */
+.checkoutSection {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.checkoutBtn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.checkoutBtn:hover {
+    background-color: #ff7875;
+}

@@ -1,0 +1,218 @@
+import { useEffect, useRef, useState } from "react";
+import { resolveCatalogProducts } from "../lib/catalogApi";
+import { useCartStore } from "../store/cartStore";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "./CartPage.module.css";
+
+const BOTTOM_THRESHOLD = 48;
+
+export function CartPage() {
+  const items = useCartStore((state) => state.items);
+  const selectedIds = useCartStore((state) => state.selectedIds);
+  const increaseQuantity = useCartStore((state) => state.increaseQuantity);
+  const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+  const reconcileItems = useCartStore((state) => state.reconcileItems);
+  const toggleSelected = useCartStore((state) => state.toggleSelected);
+  const toggleSelectAll = useCartStore((state) => state.toggleSelectAll);
+  const navigate = useNavigate();
+  const scrollAreaRef = useRef<HTMLElement>(null);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+  const [catalogNotice, setCatalogNotice] = useState("");
+  const selectedItems = items.filter((item) => selectedIds.includes(item.id));
+  const totalPrice = selectedItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+  const selectedCount = selectedItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
+  const allSelected = items.length > 0 && selectedIds.length === items.length;
+
+  const updateScrollButtonVisibility = (scrollElement: HTMLElement | null) => {
+    if (!scrollElement) {
+      return;
+    }
+
+    const distanceToBottom =
+      scrollElement.scrollHeight -
+      scrollElement.scrollTop -
+      scrollElement.clientHeight;
+
+    setShowScrollToBottom(distanceToBottom > BOTTOM_THRESHOLD);
+  };
+
+  const scrollToBottom = () => {
+    const scrollElement = scrollAreaRef.current;
+
+    if (!scrollElement) {
+      return;
+    }
+
+    scrollElement.scrollTo({
+      top: scrollElement.scrollHeight,
+      behavior: "smooth",
+    });
+    setShowScrollToBottom(false);
+  };
+
+  useEffect(() => {
+    updateScrollButtonVisibility(scrollAreaRef.current);
+  }, [items.length]);
+
+  useEffect(() => {
+    let active = true;
+
+    if (items.length === 0) {
+      setCatalogNotice("");
+      return;
+    }
+
+    const syncItems = async () => {
+      try {
+        const result = await resolveCatalogProducts(items.map((item) => item.id));
+
+        if (!active) {
+          return;
+        }
+
+        reconcileItems(result.products, result.missingIds);
+
+        if (result.missingIds.length > 0) {
+          setCatalogNotice(
+            `购物车里有 ${result.missingIds.length} 件旧商品已下架，系统已经自动移除。`,
+          );
+        } else {
+          setCatalogNotice("");
+        }
+      } catch {
+        if (active) {
+          setCatalogNotice("");
+        }
+      }
+    };
+
+    void syncItems();
+
+    return () => {
+      active = false;
+    };
+  }, [items.length, items, reconcileItems]);
+
+  return (
+    <div className={styles.page}>
+      <main
+        ref={scrollAreaRef}
+        className={styles.container}
+        onScroll={(event) => {
+          updateScrollButtonVisibility(event.currentTarget);
+        }}
+      >
+        <header className={styles.header}>
+          <h2>🛒 我的购物车</h2>
+          <Link to="/" style={{ color: "#007aff", textDecoration: "none" }}>
+            back
+          </Link>
+        </header>
+
+        {items.length === 0 ? (
+          <section className={styles.emptyState}>
+            购物车是空的，快去让 AI 推荐点什么吧！
+          </section>
+        ) : (
+          <section>
+            {catalogNotice && (
+              <div className={styles.catalogNotice}>{catalogNotice}</div>
+            )}
+            <div className={styles.selectionBar}>
+              <label className={styles.selectAllControl}>
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={() => toggleSelectAll()}
+                />
+                <span>全选</span>
+              </label>
+              <span className={styles.selectionMeta}>
+                已选 {selectedItems.length} 种商品，共 {selectedCount} 件
+              </span>
+            </div>
+
+            {items.map((item) => (
+              <article key={item.id} className={styles.cartItem}>
+                <label className={styles.checkboxWrap}>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(item.id)}
+                    onChange={() => toggleSelected(item.id)}
+                  />
+                </label>
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className={styles.itemImage}
+                />
+                <div className={styles.itemInfo}>
+                  <h3 className={styles.itemName}>{item.name}</h3>
+                  <p className={styles.itemPrice}>¥{item.price}</p>
+                  <p className={styles.itemSubtotal}>
+                    小计：¥{(item.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+                <div className={styles.quantityControl}>
+                  <button
+                    className={styles.quantityBtn}
+                    onClick={() => decreaseQuantity(item.id)}
+                  >
+                    -
+                  </button>
+                  <span className={styles.quantityValue}>{item.quantity}</span>
+                  <button
+                    className={styles.quantityBtn}
+                    onClick={() => increaseQuantity(item.id)}
+                  >
+                    +
+                  </button>
+                </div>
+              </article>
+            ))}
+
+            <footer className={styles.checkoutSection}>
+              <div style={{ fontSize: "20px" }}>
+                已选总计：
+                <span
+                  style={{
+                    color: "#ff4d4f",
+                    fontWeight: "bold",
+                    fontSize: "28px",
+                  }}
+                >
+                  ¥{totalPrice.toFixed(2)}
+                </span>
+              </div>
+              <button
+                className={styles.checkoutBtn}
+                disabled={selectedItems.length === 0}
+                onClick={() => navigate("/checkout")}
+              >
+                {selectedItems.length === 0 ? "请先勾选商品" : "去结算已选商品"}
+              </button>
+            </footer>
+          </section>
+        )}
+      </main>
+
+      {items.length > 0 && showScrollToBottom && (
+        <button
+          type="button"
+          onClick={scrollToBottom}
+          className={styles.scrollToBottomBtn}
+          title="滚动到底部"
+          aria-label="滚动到底部"
+        >
+          ↓
+        </button>
+      )}
+    </div>
+  );
+}

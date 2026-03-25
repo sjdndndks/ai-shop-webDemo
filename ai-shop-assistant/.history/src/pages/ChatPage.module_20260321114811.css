@@ -1,0 +1,138 @@
+/* 1.最外层容器 */
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+}
+
+/* 2.顶部导航栏 */
+.header {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #e5e5ea;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #f6f6f8;
+}
+
+/* 3.中间滚动区域 */
+.scrollArea {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 20px 0;
+    background-color: #ffffff;
+}
+
+/* 4.聊天列表中心约束框 */
+.chatList {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px 20px;
+}
+
+/* 5. 每一行消息的外层 (动态靠左或靠右) */
+.messageRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.messageRowUser {
+  align-items: flex-end; /* 用户靠右 */
+}
+.messageRowAi {
+  align-items: flex-start; /* AI靠左 */
+}
+
+/* 6. 气泡本体样式 */
+.bubble {
+  max-width: 75%;
+  padding: 10px 16px;
+  font-size: 16px;
+  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.bubbleUser {
+  background-color: #007aff;
+  color: white;
+  border-radius: 18px 18px 4px 18px; /* 右下角尖 */
+}
+.bubbleAi {
+  background-color: #e9e9eb;
+  color: black;
+  border-radius: 18px 18px 18px 4px; /* 左下角尖 */
+}
+
+/* 7. 各种状态提示文字 */
+.statusText {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.errorText {
+  text-align: center;
+  color: #ff4d4f;
+  margin-top: 10px;
+}
+.welcomeText {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+/* 8. 底部输入区 */
+.inputArea {
+  display: flex;
+  padding: 12px 16px;
+  background-color: #f6f6f8;
+  border-top: 1px solid #e5e5ea;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+.inputField {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 20px;
+  border: 1px solid #d1d1d6;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 9. 发送按钮 */
+.sendBtn {
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.sendBtnActive {
+  background-color: #007aff;
+  cursor: pointer;
+}
+.sendBtnDisabled {
+  background-color: #a0cfff;
+  cursor: not-allowed;
+}

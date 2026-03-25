@@ -1,0 +1,40 @@
+/* Sidebar.module.css */
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.2s ease;
+}
+
+.collapsed {
+    width: 64px;
+}
+
+.top {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.toggleBtn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #eaeaea;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
