@@ -1,9 +1,3 @@
-/* 
-  侧边栏组件
-  本质上是根据状态条件渲染不同的内容
-  根据父组件传入的折叠状态、切换方法和全局登录状态
-  渲染一个会高亮当前页面、能切换折叠、并显示用户信息的侧边栏。
-*/
 import { NavLink } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import styles from "./Sidebar.module.css";
@@ -27,7 +21,6 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
         <button
           className={styles.toggleBtn}
           onClick={onToggle}
-          // 给无障碍工具读的说明文字
           aria-label="切换侧边栏"
         >
           {collapsed ? "☰" : "<"}
@@ -42,7 +35,6 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
           className={({ isActive }) =>
             isActive ? `${styles.link} ${styles.active}` : styles.link
           }
-          // 鼠标悬停提示文字
           title="聊天"
         >
           <span className={styles.icon}>💬</span>
@@ -72,7 +64,6 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
         </NavLink>
 
         <NavLink
-          // 如果用户登录了，就跳转到结算页面，否则跳转到登录页面
           to={user ? "/checkout" : "/login"}
           className={({ isActive }) =>
             isActive ? `${styles.link} ${styles.active}` : styles.link
@@ -87,7 +78,6 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
       </nav>
 
       <div className={styles.accountPanel}>
-        {/* 如果用户已登录，就显示用户面板；否则显示游客提示。 */}
         {user ? (
           <>
             <div className={styles.accountInfo}>
@@ -99,7 +89,6 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
                     className={styles.avatarImage}
                   />
                 ) : (
-                  // 如果没有头像，就显示用户名的第一个字母并大写
                   user.name.slice(0, 1).toUpperCase()
                 )}
               </div>

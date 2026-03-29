@@ -1,22 +1,12 @@
-/* 
- * 用户认证仓库
- * 先定义仓库的结构
- * 再写一个认证请求函数，用于发送认证请求到后端
- * 再创建一个全局登录仓库，保存user和token
- * 和登录、注册、更新用户信息、登出等方法
-*/
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AuthUser } from "../types";
 
-// 同时兼容线上部署和本地开发
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
 //后端登录/注册成功后返回的响应体
 interface AuthResponse {
   user: AuthUser;
-  // 登录凭证
   token: string;
 }
 
@@ -110,7 +100,7 @@ export const useAuthStore = create<AuthStore>()(
         });
       },
 
-      // 单独更新user信息
+      // 单独更新user
       setUser: (user) => {
         set({ user });
       },
@@ -136,7 +126,6 @@ export const useAuthStore = create<AuthStore>()(
           token?: string | null;
         };
 
-        // 没有user或者token 直接当成未登录
         if (!state?.user || !state?.token) {
           return {
             user: null,

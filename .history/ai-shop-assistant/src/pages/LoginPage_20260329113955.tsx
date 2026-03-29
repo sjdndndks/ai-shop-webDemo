@@ -94,6 +94,7 @@ export function LoginPage() {
           name: name.trim(),
         });
       }
+
       navigate(redirectTo, { replace: true });
     } catch (authError) {
       setError(authError instanceof Error ? authError.message : "认证失败");
@@ -104,13 +105,12 @@ export function LoginPage() {
 
   return (
     <main className={styles.page}>
-      {/* 左边：hero介绍文案 */}
       <section className={styles.hero}>
         <div className={styles.heroBadge}>AI Shop</div>
         <h1 className={styles.heroTitle}>登录后再进入结算与支付流程</h1>
-        {/* <p className={styles.heroText}>
-          
-        </p> */}
+        <p className={styles.heroText}>
+          这一版先补齐电商产品最基本的用户闭环：身份、购物车、结算、支付。
+        </p>
         <ul className={styles.featureList}>
           <li>聊天推荐商品</li>
           <li>加购并调整数量</li>
@@ -118,29 +118,20 @@ export function LoginPage() {
         </ul>
       </section>
 
-      {/* 右边：登录注册表单 */}
       <section className={styles.card}>
-        {/* mode切换和标题 */}
         <div className={styles.cardHeader}>
-          {/* 模式切换模块 按钮和mode绑定 */}
           <div className={styles.modeSwitch}>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "login" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("login");
-                setError("");
-              }}
+              onClick={() => setMode("login")}
             >
               登录
             </button>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "register" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("register");
-                setError("");
-              }}
+              onClick={() => setMode("register")}
             >
               注册
             </button>
@@ -155,16 +146,13 @@ export function LoginPage() {
           </p>
         </div>
 
-        {/* 登录注册表单 3个label 1个{erorr} 1个button */}
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.field}>
             <span className={styles.label}>昵称</span>
             <input
-              //输入框显示的内容
               value={name}
               onChange={(event) => setName(event.target.value)}
               className={styles.input}
-              // 输入框占位符
               placeholder={mode === "login" ? "登录时可留空" : "注册时必填"}
             />
           </label>
@@ -177,7 +165,7 @@ export function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               className={styles.input}
               placeholder="you@example.com"
-              required //不能为空，也就是必填项，此时该属性值为true
+              required
             />
           </label>
 
@@ -198,7 +186,6 @@ export function LoginPage() {
           <button
             type="submit"
             className={styles.primaryBtn}
-            // 提交按钮 禁用状态
             disabled={submitting}
           >
             {submitting

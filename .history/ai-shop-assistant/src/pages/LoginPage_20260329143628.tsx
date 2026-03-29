@@ -127,20 +127,14 @@ export function LoginPage() {
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "login" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("login");
-                setError("");
-              }}
+              onClick={() => setMode("login")}
             >
               登录
             </button>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "register" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("register");
-                setError("");
-              }}
+              onClick={() => setMode("register")}
             >
               注册
             </button>
@@ -198,7 +192,6 @@ export function LoginPage() {
           <button
             type="submit"
             className={styles.primaryBtn}
-            // 提交按钮 禁用状态
             disabled={submitting}
           >
             {submitting

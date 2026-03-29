@@ -1,9 +1,3 @@
-/* 
-  侧边栏组件
-  本质上是根据状态条件渲染不同的内容
-  根据父组件传入的折叠状态、切换方法和全局登录状态
-  渲染一个会高亮当前页面、能切换折叠、并显示用户信息的侧边栏。
-*/
 import { NavLink } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import styles from "./Sidebar.module.css";

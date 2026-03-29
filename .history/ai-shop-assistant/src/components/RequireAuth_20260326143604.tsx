@@ -17,7 +17,6 @@ export function RequireAuth() {
         replace
         // 传递用户本来想去的页面  登录后跳转回该页面
         state={{
-          // 把当前完整站内地址拼出来
           from: `${location.pathname}${location.search}${location.hash}`,
         }}
       />

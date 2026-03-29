@@ -137,10 +137,7 @@ export function LoginPage() {
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "register" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("register");
-                setError("");
-              }}
+              onClick={() => setMode("register")}
             >
               注册
             </button>

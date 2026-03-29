@@ -15,16 +15,12 @@ type LocationState = {
 };
 
 export function LoginPage() {
-  // 从全局状态仓库里获取用户信息 登录方法 注册方法
   const user = useAuthStore((state) => state.user);
   const login = useAuthStore((state) => state.login);
   const register = useAuthStore((state) => state.register);
-
-  // 拿跳转工具和地址信息
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState | null;
-
   // 登录后去哪？
   const redirectTo = useMemo(
     // 有from去from 没有就回首页
@@ -34,15 +30,12 @@ export function LoginPage() {
   );
 
   // 页面本地状态
-  // 输入框内容
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //  登录or注册模式  泛型，只能是两种模式之一
+  // 登录or注册模式
   const [mode, setMode] = useState<"login" | "register">("login");
-  // 提交状态
   const [submitting, setSubmitting] = useState(false);
-  // 错误提示文案
   const [error, setError] = useState("");
 
   // 如果已经登录 直接重定向
@@ -50,7 +43,6 @@ export function LoginPage() {
     return <Navigate to={redirectTo} replace />;
   }
 
-  // 提交表单  登录和注册函数是异步
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -76,9 +68,7 @@ export function LoginPage() {
       return;
     }
 
-    // 输入数据没问题，尝试发起登录或注册
     try {
-      // 状态更新  提交状态为true  错误提示文案清空
       setSubmitting(true);
       setError("");
 
@@ -94,6 +84,7 @@ export function LoginPage() {
           name: name.trim(),
         });
       }
+
       navigate(redirectTo, { replace: true });
     } catch (authError) {
       setError(authError instanceof Error ? authError.message : "认证失败");
@@ -104,13 +95,12 @@ export function LoginPage() {
 
   return (
     <main className={styles.page}>
-      {/* 左边：hero介绍文案 */}
       <section className={styles.hero}>
         <div className={styles.heroBadge}>AI Shop</div>
         <h1 className={styles.heroTitle}>登录后再进入结算与支付流程</h1>
-        {/* <p className={styles.heroText}>
-          
-        </p> */}
+        <p className={styles.heroText}>
+          这一版先补齐电商产品最基本的用户闭环：身份、购物车、结算、支付。
+        </p>
         <ul className={styles.featureList}>
           <li>聊天推荐商品</li>
           <li>加购并调整数量</li>
@@ -118,29 +108,20 @@ export function LoginPage() {
         </ul>
       </section>
 
-      {/* 右边：登录注册表单 */}
       <section className={styles.card}>
-        {/* mode切换和标题 */}
         <div className={styles.cardHeader}>
-          {/* 模式切换模块 按钮和mode绑定 */}
           <div className={styles.modeSwitch}>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "login" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("login");
-                setError("");
-              }}
+              onClick={() => setMode("login")}
             >
               登录
             </button>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "register" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("register");
-                setError("");
-              }}
+              onClick={() => setMode("register")}
             >
               注册
             </button>
@@ -155,16 +136,13 @@ export function LoginPage() {
           </p>
         </div>
 
-        {/* 登录注册表单 3个label 1个{erorr} 1个button */}
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.field}>
             <span className={styles.label}>昵称</span>
             <input
-              //输入框显示的内容
               value={name}
               onChange={(event) => setName(event.target.value)}
               className={styles.input}
-              // 输入框占位符
               placeholder={mode === "login" ? "登录时可留空" : "注册时必填"}
             />
           </label>
@@ -177,7 +155,7 @@ export function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               className={styles.input}
               placeholder="you@example.com"
-              required //不能为空，也就是必填项，此时该属性值为true
+              required
             />
           </label>
 
@@ -198,7 +176,6 @@ export function LoginPage() {
           <button
             type="submit"
             className={styles.primaryBtn}
-            // 提交按钮 禁用状态
             disabled={submitting}
           >
             {submitting

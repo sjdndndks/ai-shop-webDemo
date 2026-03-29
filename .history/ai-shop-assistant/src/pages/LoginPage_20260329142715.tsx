@@ -127,20 +127,14 @@ export function LoginPage() {
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "login" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("login");
-                setError("");
-              }}
+              onClick={() => setMode("login")}
             >
               登录
             </button>
             <button
               type="button"
               className={`${styles.modeBtn} ${mode === "register" ? styles.modeBtnActive : ""}`}
-              onClick={() => {
-                setMode("register");
-                setError("");
-              }}
+              onClick={() => setMode("register")}
             >
               注册
             </button>
@@ -160,11 +154,9 @@ export function LoginPage() {
           <label className={styles.field}>
             <span className={styles.label}>昵称</span>
             <input
-              //输入框显示的内容
               value={name}
               onChange={(event) => setName(event.target.value)}
               className={styles.input}
-              // 输入框占位符
               placeholder={mode === "login" ? "登录时可留空" : "注册时必填"}
             />
           </label>
@@ -177,7 +169,7 @@ export function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               className={styles.input}
               placeholder="you@example.com"
-              required //不能为空，也就是必填项，此时该属性值为true
+              required
             />
           </label>
 
@@ -198,7 +190,6 @@ export function LoginPage() {
           <button
             type="submit"
             className={styles.primaryBtn}
-            // 提交按钮 禁用状态
             disabled={submitting}
           >
             {submitting

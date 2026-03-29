@@ -1,10 +1,4 @@
-/* 
- * 用户认证仓库
- * 先定义仓库的结构
- * 再写一个认证请求函数，用于发送认证请求到后端
- * 再创建一个全局登录仓库，保存user和token
- * 和登录、注册、更新用户信息、登出等方法
-*/
+
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

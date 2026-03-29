@@ -1,22 +1,12 @@
-/* 
- * 用户认证仓库
- * 先定义仓库的结构
- * 再写一个认证请求函数，用于发送认证请求到后端
- * 再创建一个全局登录仓库，保存user和token
- * 和登录、注册、更新用户信息、登出等方法
-*/
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AuthUser } from "../types";
 
-// 同时兼容线上部署和本地开发
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
 //后端登录/注册成功后返回的响应体
 interface AuthResponse {
   user: AuthUser;
-  // 登录凭证
   token: string;
 }
 
@@ -81,7 +71,6 @@ async function requestAuth(
     throw new Error("认证响应缺少用户信息"); 
   }
 
-  // 收口类型为AuthResponse
   return data as AuthResponse;
 }
 
@@ -91,8 +80,6 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       token: null,
-
-      // 登录 发送请求 更新AuthStore
       login: async (payload) => {
         const result = await requestAuth("/api/auth/login", payload);
         set({
@@ -101,7 +88,6 @@ export const useAuthStore = create<AuthStore>()(
         });
       },
 
-      // 注册 发送请求 更新AuthStore
       register: async (payload) => {
         const result = await requestAuth("/api/auth/register", payload);
         set({
@@ -109,13 +95,10 @@ export const useAuthStore = create<AuthStore>()(
           token: result.token,
         });
       },
-
-      // 单独更新user信息
       setUser: (user) => {
         set({ user });
       },
 
-      // 登出
       logout: () => {
         set({
           user: null,
@@ -136,7 +119,6 @@ export const useAuthStore = create<AuthStore>()(
           token?: string | null;
         };
 
-        // 没有user或者token 直接当成未登录
         if (!state?.user || !state?.token) {
           return {
             user: null,
