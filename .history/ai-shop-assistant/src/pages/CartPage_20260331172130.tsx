@@ -1,7 +1,6 @@
 /* 
     渲染购物车页面
-    从cartstore读取状态并计算
-    两个副作用：商品同步 滚动按钮
+    从
 */
 import { useEffect, useRef, useState } from "react";
 // 和后端商品库对账的API函数
@@ -30,7 +29,7 @@ export function CartPage() {
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   // 商品库对账通知
   const [catalogNotice, setCatalogNotice] = useState("");
-  // 购物车中被选中的商品数组
+  // 购物车中被选中的商品
   const selectedItems = items.filter((item) => selectedIds.includes(item.id));
   // 所有选中的商品总价
   const totalPrice = selectedItems.reduce(

@@ -1,8 +1,3 @@
-/* 
-    渲染购物车页面
-    从cartstore读取状态并计算
-    两个副作用：商品同步 滚动按钮
-*/
 import { useEffect, useRef, useState } from "react";
 // 和后端商品库对账的API函数
 import { resolveCatalogProducts } from "../lib/catalogApi";
@@ -30,7 +25,7 @@ export function CartPage() {
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   // 商品库对账通知
   const [catalogNotice, setCatalogNotice] = useState("");
-  // 购物车中被选中的商品数组
+  // 购物车中被选中的商品
   const selectedItems = items.filter((item) => selectedIds.includes(item.id));
   // 所有选中的商品总价
   const totalPrice = selectedItems.reduce(
@@ -193,16 +188,14 @@ export function CartPage() {
                   alt={item.name}
                   className={styles.itemImage}
                 />
-                {/* 商品信息 */}
+                {/* 视频信息 */}
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemName}>{item.name}</h3>
                   <p className={styles.itemPrice}>¥{item.price}</p>
-                  {/* 单项商品小记 保留两位小数 */}
                   <p className={styles.itemSubtotal}>
                     小计：¥{(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
-                {/* 商品选购数量控制 */}
                 <div className={styles.quantityControl}>
                   <button
                     className={styles.quantityBtn}
@@ -221,9 +214,7 @@ export function CartPage() {
               </article>
             ))}
 
-            {/* 结算区 */}
             <footer className={styles.checkoutSection}>
-              {/* 统计金额 */}
               <div style={{ fontSize: "20px" }}>
                 已选总计：
                 <span
@@ -236,7 +227,6 @@ export function CartPage() {
                   ¥{totalPrice.toFixed(2)}
                 </span>
               </div>
-              {/* 按钮 */}
               <button
                 className={styles.checkoutBtn}
                 disabled={selectedItems.length === 0}
@@ -249,7 +239,6 @@ export function CartPage() {
         )}
       </main>
 
-      {/* 购物车有商品并且离底部远就显示按钮 */}
       {items.length > 0 && showScrollToBottom && (
         <button
           type="button"

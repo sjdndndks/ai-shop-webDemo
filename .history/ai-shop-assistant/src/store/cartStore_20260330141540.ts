@@ -112,7 +112,7 @@ export const useCartStore = create<CartStore>()(
                     selectedIds: state.selectedIds.filter(id => !productIds.includes(id)),
                 })),
 
-            // 拿后端返回的最新商品数据和缺失商品id数组，更新数据 清理失效商品
+            // 拿后端返回的最新商品数据和缺失商品id数组，来同步本地购物车。
             reconcileItems: (products, missingIds) =>
                 set((state)=> {
                     // 把后端返回的商品最新数据转换为map 以商品id为key

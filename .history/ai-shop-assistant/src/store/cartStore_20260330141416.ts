@@ -1,7 +1,7 @@
 /* 
     购物车仓库结构
     存放加购的商品和选中状态
-    一整天修改购物车的操作方法
+    把所有购物车操作封装成方法
 */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -112,7 +112,7 @@ export const useCartStore = create<CartStore>()(
                     selectedIds: state.selectedIds.filter(id => !productIds.includes(id)),
                 })),
 
-            // 拿后端返回的最新商品数据和缺失商品id数组，更新数据 清理失效商品
+            // 拿后端返回的最新商品数据和缺失商品id数组，来同步本地购物车。
             reconcileItems: (products, missingIds) =>
                 set((state)=> {
                     // 把后端返回的商品最新数据转换为map 以商品id为key

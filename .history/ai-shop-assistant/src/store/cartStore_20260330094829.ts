@@ -1,8 +1,3 @@
-/* 
-    购物车仓库结构
-    存放加购的商品和选中状态
-    一整天修改购物车的操作方法
-*/
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "../types";
@@ -35,7 +30,6 @@ export const useCartStore = create<CartStore>()(
         (set)=> ({
             items: [],
             selectedIds: [],
-
             // 把商品加到购物车 点击立即购买按钮时才会触发 刚加入时默认勾选
             addToCart: (product) =>
                 set((state)=> {
@@ -63,7 +57,6 @@ export const useCartStore = create<CartStore>()(
                         selectedIds: [...state.selectedIds, product.id],
                     }
                 }),
-
             // 和+按钮绑定 加商品数量
             increaseQuantity: (productId) =>
                 set((state)=> ({
@@ -73,7 +66,6 @@ export const useCartStore = create<CartStore>()(
                         : item
                     )
                 })),
-
             // 和-按钮绑定 减商品数量
             decreaseQuantity: (productId) =>
                 set((state)=> ({
@@ -90,60 +82,47 @@ export const useCartStore = create<CartStore>()(
                         // 数量大于1 直接减1 返回[已更新的卡片]
                         return [{ ...item, quantity: item.quantity - 1 }]
                     }),
-                    // 先找被勾选列表中有没有这个商品 没有就不需要任何操作 如果有
-                    // 还没更新状态前 如果商品数量为1 那这次减1 就会被删除 要把他从勾选列表中删除
-                    // 不是1 就不要改
                     selectedIds: state.items.find(item => item.id === productId)?.quantity === 1
                         ? state.selectedIds.filter(id => id !== productId)
                         : state.selectedIds,
                 })),
-
-            // 删除单个商品
             removeFromCart: (productId) =>
                 set((state)=> ({
                     items: state.items.filter(item => item.id !== productId),
                     selectedIds: state.selectedIds.filter(id => id !== productId),
                 })),
-
-            // 删除一组商品 传入一组要删除的商品的id
             removeItems: (productIds) =>
                 set((state)=> ({
                     items: state.items.filter(item => !productIds.includes(item.id)),
                     selectedIds: state.selectedIds.filter(id => !productIds.includes(id)),
                 })),
-
-            // 拿后端返回的最新商品数据和缺失商品id数组，更新数据 清理失效商品
             reconcileItems: (products, missingIds) =>
                 set((state)=> {
-                    // 把后端返回的商品最新数据转换为map 以商品id为key
                     const productMap = new Map(products.map(product => [product.id, product]))
-                    // 从购物车卡片组中过滤掉缺失的商品并更新
                     const nextItems = state.items
                         .filter(item => !missingIds.includes(item.id))
                         .map(item => {
-                            // 拿出目前item对应的最新商品数据
                             const latestProduct = productMap.get(item.id)
 
-                            // 没有最新商品数据 直接返回原item
                             if (!latestProduct) {
                                 return item
                             }
 
-                            // 有更新数据 就用新的覆盖本地旧数据 但原来的quantity不变
                             return {
                                 ...item,
                                 ...latestProduct,
                             }
                         })
-                    // 从购物车勾选列表组中过滤掉缺失的商品id
                     const nextSelectedIds = state.selectedIds.filter(id => !missingIds.includes(id))
-                    // 判断cart items是否有变化
                     const itemsChanged =
                         nextItems.length !== state.items.length ||
                         nextItems.some((item, index) => {
                             const currentItem = state.items[index]
 
-                            // 逐项比较是否有变化 有一项不同就是变了
+                            if (!currentItem) {
+                                return true
+                            }
+
                             return (
                                 item.id !== currentItem.id ||
                                 item.name !== currentItem.name ||
@@ -152,11 +131,10 @@ export const useCartStore = create<CartStore>()(
                                 item.quantity !== currentItem.quantity
                             )
                         })
-                    // 判断selectedIds是否有变化
                     const selectionChanged =
-                        nextSelectedIds.length !== state.selectedIds.length 
+                        nextSelectedIds.length !== state.selectedIds.length ||
+                        nextSelectedIds.some((id, index) => id !== state.selectedIds[index])
 
-                    // 如果都没变就返回原来的state 不更新状态  
                     if (!itemsChanged && !selectionChanged) {
                         return state
                     }
@@ -166,28 +144,19 @@ export const useCartStore = create<CartStore>()(
                         selectedIds: nextSelectedIds,
                     }
                 }),
-
-            // 切换单个商品的勾选状态
             toggleSelected: (productId) =>
                 set((state)=> ({
                     selectedIds: state.selectedIds.includes(productId)
                         ? state.selectedIds.filter(id => id !== productId)
                         : [...state.selectedIds, productId],
                 })),
-
-            // 切换是否全选
             toggleSelectAll: () =>
                 set((state)=> ({
-                    // 先判断选中的和仓库中的所有商品组长度是否一样 一样就改成全不选
                     selectedIds: state.selectedIds.length === state.items.length
                         ? []
                         : state.items.map(item => item.id),
                 })),
-
-            // 清空勾选列表
             clearSelection: () => set({ selectedIds: [] }),
-
-            // 清空购物车
             clearCart: () => set({ items: [], selectedIds: [] })
         }),
         {
@@ -198,12 +167,9 @@ export const useCartStore = create<CartStore>()(
                     items?: CartItem[]
                     selectedIds?: string[]
                 }
-                // 如果旧数据里有 items，就用它；没有就用空数组。
                 const items = state?.items ?? []
-                // 购物车商品的id列表
                 const validIds = new Set(items.map(item => item.id))
                 const selectedIds = (state?.selectedIds ?? items.map(item => item.id))
-                // 过滤掉选中的商品id中不存在的
                     .filter(id => validIds.has(id))
 
                 return {

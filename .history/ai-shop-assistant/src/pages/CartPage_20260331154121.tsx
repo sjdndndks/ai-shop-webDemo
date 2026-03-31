@@ -1,8 +1,3 @@
-/* 
-    渲染购物车页面
-    从cartstore读取状态并计算
-    两个副作用：商品同步 滚动按钮
-*/
 import { useEffect, useRef, useState } from "react";
 // 和后端商品库对账的API函数
 import { resolveCatalogProducts } from "../lib/catalogApi";
@@ -30,7 +25,7 @@ export function CartPage() {
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   // 商品库对账通知
   const [catalogNotice, setCatalogNotice] = useState("");
-  // 购物车中被选中的商品数组
+  // 购物车中被选中的商品
   const selectedItems = items.filter((item) => selectedIds.includes(item.id));
   // 所有选中的商品总价
   const totalPrice = selectedItems.reduce(
@@ -115,15 +110,12 @@ export function CartPage() {
           setCatalogNotice("");
         }
       } catch {
-        // 同步失败 不打断购物车主流程 静默降级 不打扰用户
         if (active) {
-          // 清除提示
           setCatalogNotice("");
         }
       }
     };
 
-    // 明确告诉ts 不接返回值
     void syncItems();
 
     // 清理函数，组件卸载时关闭active
@@ -134,15 +126,13 @@ export function CartPage() {
 
   return (
     <div className={styles.page}>
-      <main //主要滚动区域
+      <main
         ref={scrollAreaRef}
         className={styles.container}
-        // 页面滚动时会触发
         onScroll={(event) => {
           updateScrollButtonVisibility(event.currentTarget);
         }}
       >
-        {/* 头部标题和返回link */}
         <header className={styles.header}>
           <h2>🛒 我的购物车</h2>
           <Link to="/" style={{ color: "#007aff", textDecoration: "none" }}>
@@ -155,19 +145,16 @@ export function CartPage() {
             购物车是空的，快去让 AI 推荐点什么吧！
           </section>
         ) : (
-          // 开始渲染购物车内容
           <section>
-            {/* 有同步提示就显示 没有就不显示 */}
             {catalogNotice && (
               <div className={styles.catalogNotice}>{catalogNotice}</div>
             )}
-            {/* 全选框和统计小字 */}
             <div className={styles.selectionBar}>
               <label className={styles.selectAllControl}>
                 <input
                   type="checkbox"
-                  checked={allSelected} //表示是否被默认选中
-                  onChange={() => toggleSelectAll()} //用户切换时
+                  checked={allSelected}
+                  onChange={() => toggleSelectAll()}
                 />
                 <span>全选</span>
               </label>
@@ -177,9 +164,7 @@ export function CartPage() {
             </div>
 
             {items.map((item) => (
-              // 每个商品卡片
               <article key={item.id} className={styles.cartItem}>
-                {/* 复选框 */}
                 <label className={styles.checkboxWrap}>
                   <input
                     type="checkbox"
@@ -187,22 +172,18 @@ export function CartPage() {
                     onChange={() => toggleSelected(item.id)}
                   />
                 </label>
-                {/* 商品图片 */}
                 <img
                   src={item.imageUrl}
                   alt={item.name}
                   className={styles.itemImage}
                 />
-                {/* 商品信息 */}
                 <div className={styles.itemInfo}>
                   <h3 className={styles.itemName}>{item.name}</h3>
                   <p className={styles.itemPrice}>¥{item.price}</p>
-                  {/* 单项商品小记 保留两位小数 */}
                   <p className={styles.itemSubtotal}>
                     小计：¥{(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
-                {/* 商品选购数量控制 */}
                 <div className={styles.quantityControl}>
                   <button
                     className={styles.quantityBtn}
@@ -221,9 +202,7 @@ export function CartPage() {
               </article>
             ))}
 
-            {/* 结算区 */}
             <footer className={styles.checkoutSection}>
-              {/* 统计金额 */}
               <div style={{ fontSize: "20px" }}>
                 已选总计：
                 <span
@@ -236,7 +215,6 @@ export function CartPage() {
                   ¥{totalPrice.toFixed(2)}
                 </span>
               </div>
-              {/* 按钮 */}
               <button
                 className={styles.checkoutBtn}
                 disabled={selectedItems.length === 0}
@@ -249,7 +227,6 @@ export function CartPage() {
         )}
       </main>
 
-      {/* 购物车有商品并且离底部远就显示按钮 */}
       {items.length > 0 && showScrollToBottom && (
         <button
           type="button"

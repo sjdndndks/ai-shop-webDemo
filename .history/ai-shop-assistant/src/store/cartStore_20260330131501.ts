@@ -1,8 +1,3 @@
-/* 
-    购物车仓库结构
-    存放加购的商品和选中状态
-    一整天修改购物车的操作方法
-*/
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "../types";
@@ -112,7 +107,7 @@ export const useCartStore = create<CartStore>()(
                     selectedIds: state.selectedIds.filter(id => !productIds.includes(id)),
                 })),
 
-            // 拿后端返回的最新商品数据和缺失商品id数组，更新数据 清理失效商品
+            // 拿后端返回的最新商品数据和缺失商品id数组，来同步本地购物车。
             reconcileItems: (products, missingIds) =>
                 set((state)=> {
                     // 把后端返回的商品最新数据转换为map 以商品id为key
@@ -143,6 +138,10 @@ export const useCartStore = create<CartStore>()(
                         nextItems.some((item, index) => {
                             const currentItem = state.items[index]
 
+                            if (!currentItem) {
+                                return true
+                            }
+
                             // 逐项比较是否有变化 有一项不同就是变了
                             return (
                                 item.id !== currentItem.id ||
@@ -154,7 +153,8 @@ export const useCartStore = create<CartStore>()(
                         })
                     // 判断selectedIds是否有变化
                     const selectionChanged =
-                        nextSelectedIds.length !== state.selectedIds.length 
+                        nextSelectedIds.length !== state.selectedIds.length ||
+                        nextSelectedIds.some((id, index) => id !== state.selectedIds[index])
 
                     // 如果都没变就返回原来的state 不更新状态  
                     if (!itemsChanged && !selectionChanged) {
@@ -174,20 +174,14 @@ export const useCartStore = create<CartStore>()(
                         ? state.selectedIds.filter(id => id !== productId)
                         : [...state.selectedIds, productId],
                 })),
-
-            // 切换是否全选
+                
             toggleSelectAll: () =>
                 set((state)=> ({
-                    // 先判断选中的和仓库中的所有商品组长度是否一样 一样就改成全不选
                     selectedIds: state.selectedIds.length === state.items.length
                         ? []
                         : state.items.map(item => item.id),
                 })),
-
-            // 清空勾选列表
             clearSelection: () => set({ selectedIds: [] }),
-
-            // 清空购物车
             clearCart: () => set({ items: [], selectedIds: [] })
         }),
         {
@@ -198,12 +192,9 @@ export const useCartStore = create<CartStore>()(
                     items?: CartItem[]
                     selectedIds?: string[]
                 }
-                // 如果旧数据里有 items，就用它；没有就用空数组。
                 const items = state?.items ?? []
-                // 购物车商品的id列表
                 const validIds = new Set(items.map(item => item.id))
                 const selectedIds = (state?.selectedIds ?? items.map(item => item.id))
-                // 过滤掉选中的商品id中不存在的
                     .filter(id => validIds.has(id))
 
                 return {
