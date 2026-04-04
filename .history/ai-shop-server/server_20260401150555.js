@@ -24,7 +24,6 @@ function normalizeText(value) {
   return String(value || '').trim().toLowerCase();
 }
 
-// 去首位空格 转小写
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
@@ -502,7 +501,7 @@ async function createSession(userId) {
   return token;
 }
 
-// 从req.headers.authorization中得到token
+// 从得到token
 function getBearerToken(authorizationHeader) {
   const header = String(authorizationHeader || '');
 
@@ -515,24 +514,19 @@ function getBearerToken(authorizationHeader) {
   return header.slice('Bearer '.length).trim();
 }
 
-// 鉴权中间件
 async function requireAuth(req, res, next) {
   try {
-    // 从请求头里拿出token
     const token = getBearerToken(req.headers.authorization);
 
-    // 没token -> 401
     if (!token) {
       return res.status(401).json({ error: '缺少登录令牌，请先登录' });
     }
 
-    // 去数据库里找这个token对应的session
     const session = await prisma.session.findUnique({
       where: { token },
       include: { user: true },
     });
 
-    // 查不到/已过期/已撤销 -> 401
     if (!session || session.revokedAt || session.expiresAt <= new Date()) {
       return res.status(401).json({ error: '登录已失效，请重新登录' });
     }
@@ -546,7 +540,6 @@ async function requireAuth(req, res, next) {
   }
 }
 
-// 判断订单商品能不能用 是不是空
 async function resolveOrderItems(items) {
   if (!Array.isArray(items) || items.length === 0) {
     return {
@@ -874,8 +867,8 @@ app.post('/api/auth/register', async (req, res) => {
 // 处理登录
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const email = normalizeEmail(req.body?.email);  //去空格转小写
-    const password = String(req.body?.password || '');  //统一转成字符串 防止错误
+    const email = normalizeEmail(req.body?.email);
+    const password = String(req.body?.password || '');
 
     if (!email || !password) {
       return res.status(400).json({ error: '邮箱和密码不能为空' });

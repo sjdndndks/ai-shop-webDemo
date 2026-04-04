@@ -54,7 +54,7 @@ export function CheckoutPage() {
   // 是否支付成功
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // 整个订单支付金额
+  //
   const [paidAmount, setPaidAmount] = useState(0);
   // 订单ID
   const [orderId, setOrderId] = useState("");

@@ -82,7 +82,6 @@ export function CartPage() {
     updateScrollButtonVisibility(scrollAreaRef.current);
   }, [items.length]);
 
-  // 和后端商品库对账
   useEffect(() => {
     // 标记本次effect是否有效
     let active = true;

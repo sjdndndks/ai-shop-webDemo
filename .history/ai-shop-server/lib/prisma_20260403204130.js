@@ -5,7 +5,7 @@
 // 从npm包里拿
 const { PrismaClient } = require('@prisma/client');
 
-const globalForPrisma = globalThis; //全局变量
+const globalForPrisma = globalThis; //整个 Node.js 进程共享的总空间。
 
 const prisma =
   // 如果全局对象里已经有一个prisma实例 就直接复用它 

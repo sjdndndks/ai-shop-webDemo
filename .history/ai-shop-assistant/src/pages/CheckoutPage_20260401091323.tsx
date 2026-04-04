@@ -16,7 +16,6 @@ type OrderResponse = {
   };
 };
 
-// 后端服务器的基础地址 通过地址找后端
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
@@ -24,7 +23,7 @@ const paymentMethodLabels = {
   card: "银行卡",
   alipay: "支付宝",
   wechat: "微信支付",
-} as const; //常量断言：把对象里的值固定死
+} as const;
 
 export function CheckoutPage() {
   const user = useAuthStore((state) => state.user);
@@ -54,7 +53,7 @@ export function CheckoutPage() {
   // 是否支付成功
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // 整个订单支付金额
+  //
   const [paidAmount, setPaidAmount] = useState(0);
   // 订单ID
   const [orderId, setOrderId] = useState("");
@@ -84,36 +83,26 @@ export function CheckoutPage() {
 
   // 运费 总价大于99或者没买商品 免运费
   const shippingFee = subtotal >= 99 || selectedItems.length === 0 ? 0 : 12;
-
-  // 应付金额 总价+运费
   const payableAmount = subtotal + shippingFee;
 
-  // 加载账户设置
   useEffect(() => {
-    // 没登录权限 没法请求后端
     if (!token) {
       return;
     }
 
     let active = true;
 
-    // 加载设置函数
     const loadSettings = async () => {
       try {
         setLoadingSettings(true);
-
-        // 去后端拉地址和支付方式
         const settings = await fetchAccountSettings(token);
 
         if (!active) {
           return;
         }
 
-        // 同步信息
         setAccountSettings(settings);
         setUser(settings.user);
-
-        // 设置地址 默认地址？第一个地址？空地址
         setSelectedAddressId(
           settings.addresses.find((address) => address.isDefault)?.id ||
             settings.addresses[0]?.id ||
@@ -131,7 +120,6 @@ export function CheckoutPage() {
           return;
         }
 
-        // 设置error信息
         setError(
           loadError instanceof Error
             ? loadError.message
@@ -151,11 +139,9 @@ export function CheckoutPage() {
     };
   }, [setUser, token]);
 
-  // 和后端商品库对账 和购物车的那个一样
   useEffect(() => {
     let active = true;
 
-    // 购物车为空 清楚提示并退出
     if (items.length === 0) {
       setCatalogNotice("");
       return;
@@ -194,32 +180,26 @@ export function CheckoutPage() {
     };
   }, [items, reconcileItems]);
 
-  // 如果没登录 就转到登录页
   if (!user || !token) {
     return <Navigate to="/login" replace />;
   }
 
-  // 处理提交订单事件
   const handleSubmit = async () => {
-    // 没选商品
     if (selectedItems.length === 0) {
       setError("请先在购物车里勾选要结算的商品。");
       return;
     }
 
-    // 没保存过地址
     if (!selectedAddressId) {
       setError("请先在设置里保存地址，并选择一个收货地址。");
       return;
     }
 
-    // 没保存过支付方式
     if (!selectedPaymentMethodId) {
       setError("请先在设置里保存支付方式，并选择一个支付方式。");
       return;
     }
 
-    // 开始提交流程
     try {
       setError("");
       setSubmitting(true);
@@ -227,7 +207,6 @@ export function CheckoutPage() {
       let response: Response;
 
       try {
-        // 提交订单
         response = await fetch(`${API_BASE_URL}/api/orders`, {
           method: "POST",
           headers: {
@@ -283,12 +262,10 @@ export function CheckoutPage() {
     <main className={styles.page}>
       <div className={styles.content}>
         <header className={styles.header}>
-          {/* 左侧标题区 */}
           <div>
             <p className={styles.kicker}>Checkout</p>
             <h1 className={styles.title}>确认订单与支付</h1>
           </div>
-          {/* 右侧link区 */}
           <div className={styles.headerActions}>
             <Link to="/settings" className={styles.backLink}>
               管理地址与支付方式
@@ -300,7 +277,6 @@ export function CheckoutPage() {
         </header>
 
         {paymentSuccess ? (
-          // 支付成功
           <section className={styles.successCard}>
             <div className={styles.successIcon}>✓</div>
             <h2 className={styles.successTitle}>支付成功</h2>
@@ -325,12 +301,9 @@ export function CheckoutPage() {
             </div>
           </section>
         ) : (
-          // 还没支付成功
           <div className={styles.grid}>
-            {/* 左侧表单卡片 */}
             <section className={styles.formCard}>
               <div className={styles.form}>
-                {/* 收货地址区 */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
                     <div>
@@ -350,7 +323,6 @@ export function CheckoutPage() {
                     </div>
                   ) : accountSettings?.addresses.length ? (
                     <div className={styles.optionList}>
-                      {/* 渲染地址卡片组 */}
                       {accountSettings.addresses.map((address) => (
                         <button
                           type="button"
@@ -380,7 +352,6 @@ export function CheckoutPage() {
                   )}
                 </div>
 
-                {/* 支付方式区 */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
                     <div>
@@ -451,7 +422,6 @@ export function CheckoutPage() {
               </div>
             </section>
 
-            {/* 右侧总计卡片 */}
             <aside className={styles.summaryCard}>
               <div className={styles.summaryHeader}>
                 <span>已选商品</span>
@@ -484,14 +454,12 @@ export function CheckoutPage() {
                 <span>商品小计</span>
                 <strong>¥{subtotal.toFixed(2)}</strong>
               </div>
-
               <div className={styles.totalRow}>
                 <span>运费</span>
                 <strong>
                   {shippingFee === 0 ? "免运费" : `¥${shippingFee.toFixed(2)}`}
                 </strong>
               </div>
-
               <div className={`${styles.totalRow} ${styles.grandTotal}`}>
                 <span>应付总额</span>
                 <strong>¥{payableAmount.toFixed(2)}</strong>

@@ -83,7 +83,6 @@ async function requestJson<T>(path: string, options: RequestOptions): Promise<T>
   return (data ?? {}) as T;
 }
 
-// 获取账户设置
 export async function fetchAccountSettings(token: string) {
   return requestJson<AccountSettings>("/api/account/settings", {
     method: "GET",

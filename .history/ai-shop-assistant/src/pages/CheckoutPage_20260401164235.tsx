@@ -54,7 +54,7 @@ export function CheckoutPage() {
   // 是否支付成功
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // 整个订单支付金额
+  //
   const [paidAmount, setPaidAmount] = useState(0);
   // 订单ID
   const [orderId, setOrderId] = useState("");
@@ -325,12 +325,9 @@ export function CheckoutPage() {
             </div>
           </section>
         ) : (
-          // 还没支付成功
           <div className={styles.grid}>
-            {/* 左侧表单卡片 */}
             <section className={styles.formCard}>
               <div className={styles.form}>
-                {/* 收货地址区 */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
                     <div>
@@ -350,7 +347,6 @@ export function CheckoutPage() {
                     </div>
                   ) : accountSettings?.addresses.length ? (
                     <div className={styles.optionList}>
-                      {/* 渲染地址卡片组 */}
                       {accountSettings.addresses.map((address) => (
                         <button
                           type="button"
@@ -380,7 +376,6 @@ export function CheckoutPage() {
                   )}
                 </div>
 
-                {/* 支付方式区 */}
                 <div className={styles.section}>
                   <div className={styles.sectionHeader}>
                     <div>
@@ -451,7 +446,6 @@ export function CheckoutPage() {
               </div>
             </section>
 
-            {/* 右侧总计卡片 */}
             <aside className={styles.summaryCard}>
               <div className={styles.summaryHeader}>
                 <span>已选商品</span>
@@ -484,14 +478,12 @@ export function CheckoutPage() {
                 <span>商品小计</span>
                 <strong>¥{subtotal.toFixed(2)}</strong>
               </div>
-
               <div className={styles.totalRow}>
                 <span>运费</span>
                 <strong>
                   {shippingFee === 0 ? "免运费" : `¥${shippingFee.toFixed(2)}`}
                 </strong>
               </div>
-
               <div className={`${styles.totalRow} ${styles.grandTotal}`}>
                 <span>应付总额</span>
                 <strong>¥{payableAmount.toFixed(2)}</strong>

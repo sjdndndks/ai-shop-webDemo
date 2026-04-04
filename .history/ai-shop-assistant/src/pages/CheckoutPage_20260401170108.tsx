@@ -54,7 +54,7 @@ export function CheckoutPage() {
   // 是否支付成功
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // 整个订单支付金额
+  //
   const [paidAmount, setPaidAmount] = useState(0);
   // 订单ID
   const [orderId, setOrderId] = useState("");
@@ -484,14 +484,12 @@ export function CheckoutPage() {
                 <span>商品小计</span>
                 <strong>¥{subtotal.toFixed(2)}</strong>
               </div>
-
               <div className={styles.totalRow}>
                 <span>运费</span>
                 <strong>
                   {shippingFee === 0 ? "免运费" : `¥${shippingFee.toFixed(2)}`}
                 </strong>
               </div>
-
               <div className={`${styles.totalRow} ${styles.grandTotal}`}>
                 <span>应付总额</span>
                 <strong>¥{payableAmount.toFixed(2)}</strong>

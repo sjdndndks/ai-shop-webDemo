@@ -82,7 +82,6 @@ export function CartPage() {
     updateScrollButtonVisibility(scrollAreaRef.current);
   }, [items.length]);
 
-  // 和后端商品库对账
   useEffect(() => {
     // 标记本次effect是否有效
     let active = true;
@@ -257,9 +256,9 @@ export function CartPage() {
           onClick={scrollToBottom}
           className={styles.scrollToBottomBtn}
           title="滚动到底部" //鼠标悬停时的提示
-          aria-label="滚动到底部" //给无障碍工具看的
+          aria-label="滚动到底部"
         >
-          ⬇
+          ↓
         </button>
       )}
     </div>

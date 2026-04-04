@@ -875,7 +875,7 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const email = normalizeEmail(req.body?.email);  //去空格转小写
-    const password = String(req.body?.password || '');  //统一转成字符串 防止错误
+    const password = String(req.body?.password || '');  //转成字符串 防止错误
 
     if (!email || !password) {
       return res.status(400).json({ error: '邮箱和密码不能为空' });

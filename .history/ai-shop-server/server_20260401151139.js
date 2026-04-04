@@ -24,7 +24,6 @@ function normalizeText(value) {
   return String(value || '').trim().toLowerCase();
 }
 
-// 去首位空格 转小写
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
@@ -546,7 +545,6 @@ async function requireAuth(req, res, next) {
   }
 }
 
-// 判断订单商品能不能用 是不是空
 async function resolveOrderItems(items) {
   if (!Array.isArray(items) || items.length === 0) {
     return {
@@ -874,8 +872,8 @@ app.post('/api/auth/register', async (req, res) => {
 // 处理登录
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const email = normalizeEmail(req.body?.email);  //去空格转小写
-    const password = String(req.body?.password || '');  //统一转成字符串 防止错误
+    const email = normalizeEmail(req.body?.email);
+    const password = String(req.body?.password || '');
 
     if (!email || !password) {
       return res.status(400).json({ error: '邮箱和密码不能为空' });
